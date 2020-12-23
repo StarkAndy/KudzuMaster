@@ -6,25 +6,54 @@
  * @flow strict-local
  */
 
-import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-
-
-//declaring global
-let test = 'test';
-let isAvaialble = true;
+import React, {useState} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 
 const App = () => {
+  const [loader, isLoading] = useState(true);
+  const [data, changeData] = useState('');
 
-  //local const cannot be modified
-  const testArray = [{name: 'test'}];
+  const apiCall = (text) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        fetch('https://jsonplaceholder.typicode.com/posts/1', {
+          method: 'GET',
+        })
+          .then((response) => response.json())
+          .then((responseJson) => {
+            resolve(responseJson);
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      }, 3000);
+    });
+  };
 
-  //local variable can be modified 
-  let name="test";
+  apiCall()
+    .then((res) => {
+      isLoading(false);
+      changeData(res);
+    })
+    .catch((message) => {
+      isLoading(false);
+    });
 
   return (
     <View>
-      <Text>{test}</Text>
+      <SafeAreaView>
+        {loader ? (
+          <ActivityIndicator />
+        ) : (
+          <Text style={{fontSize: 30, alignSelf: 'center'}}>{data.id}</Text>
+        )}
+      </SafeAreaView>
     </View>
   );
 };
