@@ -10,6 +10,8 @@ import {
 import UserInfo from './component/UserInfo';
 import CustomButton from './component/CustomButton';
 
+import Route from './route/route';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -43,14 +45,7 @@ class App extends React.Component {
   };
 
   render() {
-    return (
-      <SafeAreaView>
-        <View style={{alignItems: 'center'}}>
-          <UserInfo name={this.state.name} age={this.state.age} />
-          <CustomButton onPress={this.pressed} label={'Done'} />
-        </View>
-      </SafeAreaView>
-    );
+    return <Route />;
   }
 }
 
