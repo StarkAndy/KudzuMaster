@@ -1,48 +1,37 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
-import axios from 'axios';
+import React from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
+import {connect} from 'react-redux';
+import {fetchNews} from './action/actions';
 
-const NewsScreen = () => {
-  const [newData, changeNewsData] = useState('');
-
-  function baseAxios(options) {
-    const defaultHeaders = {
-      'Content-Type': 'application/json',
+class NewsScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false,
+      newsData: '',
     };
-
-    return axios.create({
-      baseURL: 'https://newsapi.org/v2/top-headlines',
-      timeout: 30000,
-      headers: defaultHeaders,
-    });
   }
+  render() {
+    return (
+      <View>
+        <TouchableOpacity onPress={() => this.props.fetchNewsData()}>
+          <Text>News repsonse</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
 
-  useEffect(() => {
-    function fetchNewsData() {
-      const reqObj = {
-        method: 'get',
-        url: null,
-        params: {country: 'us', apiKey: '525d59de9c564eceb17a9d1cf351f174'},
-      };
-
-      baseAxios()
-        .request(reqObj)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-
-    fetchNewsData();
-  });
-
-  return (
-    <View>
-      <Text>News repsonse</Text>
-    </View>
-  );
+const mapStateToProps = (state) => {
+  return {
+    data: '',
+  };
 };
 
-export default NewsScreen;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchNewsData: () => dispatch(fetchNews()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewsScreen);
